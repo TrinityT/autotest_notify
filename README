@@ -1,0 +1,16 @@
+ZenTest用.autotestファイル
+下記環境で動作を確認
+
+●OS
+Linux Mint 12 64bit
+
+●gem 
+diff-lcs (1.1.3)
+rails (2.3.11)
+rake (0.8.7)
+redgreen (1.2.2)
+rspec (1.3.2)
+rspec-rails (1.3.4)
+rubygems-update (1.5.2)
+spork (0.8.0)
+ZenTest (4.2.0)
