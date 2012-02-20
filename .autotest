@@ -1,0 +1,39 @@
+# -*- ruby -*-
+
+# require 'autotest/autoupdate'
+# require 'autotest/once'
+# require 'autotest/rcov'
+# require 'autotest/restart'
+# require 'autotest/timestamp'
+
+# Autotest::AutoUpdate.sleep_time = o
+# Autotest::AutoUpdate.update_cmd = o
+# Autotest::RCov.command = o
+# Autotest::RCov.pattern = o
+
+module Autotest::Notify
+
+  ok_img = "/home/takakura/.rails_ok.png"
+  ng_img = "/home/takakura/.rails_fail.png"
+
+  def self.notify title, msg, img
+    msg += " at #{Time.now.strftime('%Y-%m-%d %H:%M:%S')}"
+    system "/usr/bin/notify-send -i '#{img}' '#{title}' '#{msg.inspect}'"
+  end
+
+  Autotest.add_hook :ran_command do |at|
+    results = at.results.last
+    examples = results[/(\d+)\s+examples?/].to_i  # テストの総数
+    failures = results[/(\d+)\s+failures?/].to_i  # 失敗の数
+    pending  = results[/(\d+)\s+pending?/].to_i   # ペンディングの数
+    if examples >= 0
+      if failures > 0
+        notify "Tests Failed", "#{examples} examples, #{failures} failures, and #{pending} pending", ng_img
+      else
+        notify "Tests Passed", "#{examples} examples, #{failures} failures, and #{pending} pending", ok_img
+      end
+    else
+      notify "Tests Errored", "errors", ng_img
+    end
+  end
+end
